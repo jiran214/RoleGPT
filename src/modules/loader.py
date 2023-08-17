@@ -7,6 +7,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.document_loaders import TextLoader, PyPDFLoader
 from langchain.vectorstores import Qdrant
 
+
 db_location = "db/Qdrant"
 docs_location = "static/documents/{}"
 
@@ -27,24 +28,27 @@ pdf_splitter = RecursiveCharacterTextSplitter(
 
 class Loader:
 
-    def __init__(self, file_name):
+    def __init__(self, dir_path):
+        file_name = dir_path
+        self.dir_path = dir_path
         self.file_name = file_name
         self.file_extension = file_name.split(".")[-1]
 
-    def load_pdf(self) -> List[Document]:
-        loader = PyPDFLoader(os.path.join(root_path, docs_location.format(self.file_name)))
+    def load_pdf(self, path) -> List[Document]:
+        loader = PyPDFLoader(path)
         pages = loader.load_and_split(text_splitter=pdf_splitter)
         return pages
 
-    def load_txt(self) -> List[Document]:
-        loader = TextLoader(os.path.join(root_path, docs_location.format(self.file_name)), encoding='utf-8')
+    def load_txt(self, path) -> List[Document]:
+        loader = TextLoader(path, encoding='utf-8')
         documents = loader.load()
         docs = text_splitter.split_documents(documents)
         return docs
 
     def load(self):
-        load_func = getattr(self, f'load_{self.file_extension}', None)
-        if load_func:
-            return load_func()
-        else:
-            logger.warning('暂时不支持该类型文件')
+        for path in self.dir_path:
+            load_func = getattr(self, f'load_{self.file_extension}', None)
+            if load_func:
+                yield load_func(path)
+            else:
+                print('暂时不支持该类型文件')

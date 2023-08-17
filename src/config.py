@@ -4,6 +4,13 @@
 # @Author  : 雷雨
 # @File    : config.py
 # @Desc    :
+from pathlib import Path
 
 
-api_key = None
+class Config:
+    root_path = Path(__file__).parent
+    knowledge_path = (root_path.parent / 'knowledge').absolute()
+    api_key_list = [
+        'xxxxx'
+    ]
+    api_key = ''
