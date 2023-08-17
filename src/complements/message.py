@@ -4,6 +4,7 @@
 # @Author  : 雷雨
 # @File    : message.py
 # @Desc    :
+from queue import Queue
 from typing import Any, Iterable
 
 from pydantic import BaseModel
@@ -19,10 +20,22 @@ class Message(BaseModel):
 class MessageQueue:
 
     def __init__(self):
-        self.queue = []
+        self.queue = Queue()
 
     def get(self) -> Iterable[Message]:
         yield ''
 
     def put(self, message: Message):
         ...
+
+
+# class FeiShu:
+#
+#     def __init__(self):
+#         self.queue = Queue()
+#
+#     def get(self) -> Iterable[Message]:
+#         yield ''
+#
+#     def put(self, message: Message):
+#         ...

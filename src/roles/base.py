@@ -7,15 +7,17 @@
 import abc
 from typing import List
 
-from complement.converters.base import Converter
-from complement.message import MessageQueue, Message
-from src.complement.role_context import RoleContext
+from langchain.agents import AgentExecutor
+
+from complements.converters.base import Converter
+from complements.message import MessageQueue, Message
+from src.complements.role_context import RoleContext
 
 
 class Role(abc.ABC):
     name = None
     tools = None
-    brain = None
+    brain: AgentExecutor = None
     prompt = None
     output_converters: List[Converter] = []
 

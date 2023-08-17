@@ -30,9 +30,7 @@ class MemoryCue(BaseModel):
     ...
 
 
-class BaseMemory(abc.ABC):
-    def __init__(self, collection):
-        self.vs: BaseVS = VS(collection)
+class BaseMemory(BaseVS, abc.ABC):
 
     @abc.abstractmethod
     def recall(self, cue: MemoryCue):
@@ -46,15 +44,20 @@ class BaseMemory(abc.ABC):
 class ShortTermMemory(BaseMemory):
 
     def recall(self, cue: MemoryCue):
-        pass
+        query = ''
+        docs = self.similarity_search(query, k=4)
+        return docs
 
     def memorize(self, fragment: List[MemoryFragment]):
-        pass
+        self.add_documents(fragment)
 
 
 class LongTermMemory(BaseMemory):
+
     def recall(self, cue: MemoryCue):
-        pass
+        query = ''
+        docs = self.similarity_search(query, k=4)
+        return docs
 
     def memorize(self, fragment: List[MemoryFragment]):
-        pass
+        self.add_documents(fragment)

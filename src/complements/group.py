@@ -8,8 +8,8 @@ import abc
 from copy import deepcopy
 from typing import List, Dict
 
-from complement.message import MessageQueue, Message
-from complement import knowledge
+from complements.message import MessageQueue, Message
+from complements import knowledge
 from roles.base import Role
 
 
@@ -28,17 +28,21 @@ class Env:
 
 
 class BaseGroup(abc.ABC):
-    roles = []
 
-    def __init__(self):
+    def __init__(self, roles: List[Role], invest):
+        self.roles = roles
+        self.invest = invest
         self.init()
 
     @abc.abstractmethod
     def init(self):
         # 初始化角色
-        # 每个角色读取记忆
-        # 每个角色加载记忆
-        # 本地知识库加载知识
+        for role in self.roles:
+            # 是否更新知识
+            # 每个角色读取记忆
+            # 每个角色加载记忆
+            # 本地知识库加载知识
+            ...
         pass
 
     @abc.abstractmethod

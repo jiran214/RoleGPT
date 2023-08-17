@@ -6,11 +6,14 @@
 # @Desc    :
 from pathlib import Path
 
+from langchain.agents import AgentType
+
 
 class Config:
     root_path = Path(__file__).parent
     knowledge_path = (root_path.parent / 'knowledge').absolute()
+    agent_type = AgentType.OPENAI_FUNCTIONS
+    api_key = ''
     api_key_list = [
         'xxxxx'
     ]
-    api_key = ''

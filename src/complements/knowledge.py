@@ -6,7 +6,7 @@
 # @Desc    :
 from typing import List
 
-from complement.memory import LongTermMemory, BaseMemory, MemoryCue, MemoryFragment
+from complements.memory import LongTermMemory, BaseMemory, MemoryCue, MemoryFragment
 from modules import BaseVS, VS
 from modules.loader import Loader
 
@@ -22,9 +22,12 @@ class Knowledge:
     def search(self, cue: MemoryCue):
         self.long_term_memory.recall(cue)
 
-    def learn(self):
+    def learn(self, dir_path):
         dir_path = ''
         loader = Loader(dir_path)
         for docs in loader.load():
             fragments = MemoryFragment.from_docs(docs)
             self.long_term_memory.memorize(fragments)
+
+    def as_long_term_memory(self):
+        return self.long_term_memory
