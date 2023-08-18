@@ -21,3 +21,6 @@ class RoleContext(BaseModel):
     def summary(self):
         """对短期或长期记忆总结"""
         pass
+
+    class Config:
+        arbitrary_types_allowed = True

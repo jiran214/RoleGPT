@@ -6,6 +6,8 @@
 # @Desc    :
 from typing import Type
 
-from modules.vectorstore import QdrantVS, BaseVS
+from langchain.vectorstores import VectorStore
 
-VS: Type[BaseVS] = QdrantVS
+from modules.vectorstore import QdrantVS, VSCreateMixin
+
+VS: Type[VSCreateMixin] = QdrantVS

@@ -1,10 +1,14 @@
 import openai
-from ratelimit import RateLimitDecorator
+import openai as openai
+from ratelimit import RateLimitDecorator, limits
 
+import config
+from utils.api_key_manager import KeyManager, inject_param_decorator
 
 # 限流
-openai.ChatCompletion.create = RateLimitDecorator(calls=3, period=1, raise_on_limit=False)(openai.ChatCompletion.create)
-openai.Embedding.create = RateLimitDecorator(calls=3, period=1, raise_on_limit=False)(openai.Embedding.create)
+key_manager = KeyManager(config.api_key_list + [config.api_key])
+openai.ChatCompletion.create = inject_param_decorator(api_key=key_manager.assign)(openai.ChatCompletion.create)
+openai.Embedding.create = inject_param_decorator(api_key=key_manager.assign)(openai.Embedding.create)
 
 
 # 代理

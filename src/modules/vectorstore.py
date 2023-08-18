@@ -9,11 +9,19 @@ import abc
 from langchain.vectorstores import VectorStore, Qdrant
 from qdrant_client import QdrantClient
 
-
+from config import root_path
 from modules import llm
 
 
-class BaseVS(abc.ABC, VectorStore):
+class VSCreateMixin:
+
+    __client = {}
+
+    @classmethod
+    def get_client(cls, path):
+        if path not in cls.__client:
+            cls.__client[path] = QdrantClient(path)
+        return cls.__client[path]
 
     @classmethod
     @abc.abstractmethod
@@ -26,23 +34,22 @@ class BaseVS(abc.ABC, VectorStore):
         ...
 
 
-class QdrantVS(Qdrant, BaseVS):
+class QdrantVS(Qdrant, VSCreateMixin):
+
     @classmethod
     def from_disk(cls, collection: str):
-        client = QdrantClient(path="path/to/db")  # Persists changes to disk
         qdrant = cls(
-            client=client,
+            client=cls.get_client(path=str(root_path / 'db')),
             collection_name=collection,
-            embeddings=llm.embeddings,
+            embeddings=llm.Embedding,
         )
         return qdrant
 
     @classmethod
     def from_memory(cls, collection: str):
-        client = QdrantClient(":memory:")
         qdrant = cls(
-            client=client,
+            client=cls.get_client(":memory:"),
             collection_name=collection,
-            embeddings=llm.embeddings,
+            embeddings=llm.Embedding,
         )
         return qdrant

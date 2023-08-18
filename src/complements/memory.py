@@ -10,7 +10,7 @@ from typing import List
 from langchain.schema import Document
 from pydantic import BaseModel
 
-from modules import BaseVS, VS
+from modules import VS
 
 
 class MemoryFragment(Document):
@@ -30,18 +30,7 @@ class MemoryCue(BaseModel):
     ...
 
 
-class BaseMemory(BaseVS, abc.ABC):
-
-    @abc.abstractmethod
-    def recall(self, cue: MemoryCue):
-        ...
-
-    @abc.abstractmethod
-    def memorize(self, fragment: List[MemoryFragment]):
-        ...
-
-
-class ShortTermMemory(BaseMemory):
+class MemoryMethodMixin:
 
     def recall(self, cue: MemoryCue):
         query = ''
@@ -52,12 +41,9 @@ class ShortTermMemory(BaseMemory):
         self.add_documents(fragment)
 
 
-class LongTermMemory(BaseMemory):
+class ShortTermMemory(VS, MemoryMethodMixin):
+    pass
 
-    def recall(self, cue: MemoryCue):
-        query = ''
-        docs = self.similarity_search(query, k=4)
-        return docs
 
-    def memorize(self, fragment: List[MemoryFragment]):
-        self.add_documents(fragment)
+class LongTermMemory(VS, MemoryMethodMixin):
+    pass

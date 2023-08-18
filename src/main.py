@@ -5,3 +5,12 @@
 # @File    : main.py
 # @Desc    :
 import config
+import roles.stars
+from complements.group import Group
+
+config.api_key = """"""
+
+Group(
+    Roles=[roles.stars.KanyeWest],
+    invest=100
+).run()

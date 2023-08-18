@@ -8,12 +8,11 @@ from queue import Queue
 from typing import Any, Iterable
 
 from pydantic import BaseModel
-from roles.base import Role
 
 
 class Message(BaseModel):
-    origin: Role
-    to: Role
+    origin: 'Role'
+    to: 'Role'
     message: Any
 
 
@@ -23,10 +22,10 @@ class MessageQueue:
         self.queue = Queue()
 
     def get(self) -> Iterable[Message]:
-        yield ''
+        yield self.queue.get()
 
     def put(self, message: Message):
-        ...
+        self.queue.put(message)
 
 
 # class FeiShu:

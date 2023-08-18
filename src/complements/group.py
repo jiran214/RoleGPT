@@ -6,8 +6,9 @@
 # @Desc    :
 import abc
 from copy import deepcopy
-from typing import List, Dict
+from typing import List, Dict, Type
 
+import config
 from complements.message import MessageQueue, Message
 from complements import knowledge
 from roles.base import Role
@@ -27,24 +28,26 @@ class Env:
         Message.to.message_queue.put(message)
 
 
-class BaseGroup(abc.ABC):
+class Group:
 
-    def __init__(self, roles: List[Role], invest):
-        self.roles = roles
+    group_name: str = 'default_group'
+
+    def __init__(self, Roles: List[Type[Role]], invest):
+        self.Roles = Roles
         self.invest = invest
+        self.roles: List[Role] = []
         self.init()
 
-    @abc.abstractmethod
     def init(self):
         # 初始化角色
-        for role in self.roles:
-            # 是否更新知识
-            # 每个角色读取记忆
-            # 每个角色加载记忆
-            # 本地知识库加载知识
-            ...
-        pass
+        for role_cls in self.Roles:
+            role = role_cls.init()
+            knowledge_base = knowledge.Knowledge(base_name=f"{self.group_name}:common")
+            dir_path = (config.knowledge_path / 'common').absolute()
+            knowledge_base.learn(dir_path)
+            role.set_common_knowledge(knowledge_base)
+            self.roles.append(role)
 
-    @abc.abstractmethod
     def run(self):
-        ...
+        for role in self.roles:
+            role.wait()
