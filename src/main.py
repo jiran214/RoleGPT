@@ -8,7 +8,6 @@ import config
 import roles.stars
 from complements.group import Group
 
-config.api_key = """"""
 
 Group(
     Roles=[roles.stars.KanyeWest],

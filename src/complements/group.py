@@ -42,12 +42,15 @@ class Group:
         # 初始化角色
         for role_cls in self.Roles:
             role = role_cls.init()
-            knowledge_base = knowledge.Knowledge(base_name=f"{self.group_name}:common")
-            dir_path = (config.knowledge_path / 'common').absolute()
-            knowledge_base.learn(dir_path)
-            role.set_common_knowledge(knowledge_base)
+            common_path = (config.knowledge_path / 'common')
+            if len([path for path in common_path.iterdir()]) > 0:
+                knowledge_base = knowledge.Knowledge(base_name=f"{self.group_name}.common")
+                dir_path = common_path.absolute()
+                knowledge_base.learn(dir_path)
+                role.set_common_knowledge(knowledge_base)
             self.roles.append(role)
 
     def run(self):
+        print('run')
         for role in self.roles:
             role.wait()

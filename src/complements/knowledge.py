@@ -7,16 +7,15 @@
 from typing import List
 
 from complements.memory import LongTermMemory, MemoryCue, MemoryFragment
+from modules import llm
 from modules.loader import Loader
+from modules.vectorstore import MemoryFactory
 
 
 class Knowledge:
 
     def __init__(self, base_name):
-        self.long_term_memory = LongTermMemory.from_disk(collection=base_name)
-
-    def save(self, fragment: List[MemoryFragment]):
-        self.long_term_memory.memorize(fragment)
+        self.long_term_memory: LongTermMemory = MemoryFactory.from_disk(collection=base_name)
 
     def search(self, cue: MemoryCue):
         self.long_term_memory.recall(cue)

@@ -14,6 +14,7 @@ from complements import memory, knowledge
 from complements.converters.base import Converter
 from complements.knowledge import Knowledge
 from complements.message import MessageQueue, Message
+from modules.vectorstore import MemoryFactory
 from src.complements.role_context import RoleContext
 
 
@@ -43,6 +44,8 @@ class Role(abc.ABC):
 
     def wait(self):
         # self.validate()
+        print('run')
+        print(self.role_context.long_term_memory.recall('123'))
         for message in self.message_queue.get():
             data = self.react(message)
             # 异步
@@ -52,11 +55,11 @@ class Role(abc.ABC):
 
     @classmethod
     def init(cls):
-        knowledge_base = knowledge.Knowledge(base_name=f"{cls.name}:long_term_memory")
+        knowledge_base = knowledge.Knowledge(base_name=f"{cls.name}.long_term_memory")
         dir_path = (config.knowledge_path / cls.name).absolute()
         knowledge_base.learn(dir_path)
         role_context = RoleContext(
-            shor_term_memory=memory.ShortTermMemory.from_memory(f"{cls.name}:short_term_memory"),
+            shor_term_memory=MemoryFactory.from_memory(f"{cls.name}.short_term_memory"),
             long_term_memory=knowledge_base.as_long_term_memory(),
             knowledge_base=None
         )

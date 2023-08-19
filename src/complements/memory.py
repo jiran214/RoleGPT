@@ -8,13 +8,13 @@ import abc
 from typing import List
 
 from langchain.schema import Document
+from langchain.vectorstores import Qdrant, VectorStore
 from pydantic import BaseModel
-
-from modules import VS
 
 
 class MemoryFragment(Document):
     """处理metadata"""
+
     @classmethod
     def from_docs(cls, docs: List[Document]):
         return [
@@ -30,20 +30,22 @@ class MemoryCue(BaseModel):
     ...
 
 
-class MemoryMethodMixin:
+class Memory:
+
+    def __init__(self, client: VectorStore):
+        self.client = client
 
     def recall(self, cue: MemoryCue):
-        query = ''
-        docs = self.similarity_search(query, k=4)
+        docs = self.client.similarity_search(query, k=4)
         return docs
 
     def memorize(self, fragment: List[MemoryFragment]):
-        self.add_documents(fragment)
+        self.client.add_documents(fragment)
 
 
-class ShortTermMemory(VS, MemoryMethodMixin):
+class ShortTermMemory(Memory):
     pass
 
 
-class LongTermMemory(VS, MemoryMethodMixin):
+class LongTermMemory(Memory):
     pass

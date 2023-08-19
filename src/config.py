@@ -13,6 +13,9 @@ knowledge_path = root_path.parent / 'knowledge'
 agent_type = AgentType.OPENAI_FUNCTIONS
 api_key = ''
 api_key_list = [
-    'xxxxx'
+    '',
 ]
 language = '中文'
+proxy = 'http://127.0.0.1:7890'
+
+from utils import init

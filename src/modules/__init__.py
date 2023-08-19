@@ -5,9 +5,3 @@
 # @File    : __init__.py
 # @Desc    :
 from typing import Type
-
-from langchain.vectorstores import VectorStore
-
-from modules.vectorstore import QdrantVS, VSCreateMixin
-
-VS: Type[VSCreateMixin] = QdrantVS

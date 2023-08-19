@@ -5,7 +5,6 @@ from datetime import datetime, timedelta
 from typing import Dict
 
 from ratelimit import RateLimitDecorator
-from ratelimiter import RateLimiter
 
 
 class KeyManager:
@@ -14,7 +13,7 @@ class KeyManager:
         self.seconds = seconds
         self.sleep_time = sleep_time
         self.max_calls = max_calls
-        self.rate_limiters: Dict[str: RateLimiter] = {}
+        self.rate_limiters = {}
 
         for key in api_key_list:
             self.rate_limiters[key] = RateLimitDecorator(
@@ -30,6 +29,7 @@ class KeyManager:
                     if key := rate_limiter(key):
                         return key
                 time.sleep(self.sleep_time)
+                print('wait')
 
 
 def inject_param_decorator(**inject_kwargs):
