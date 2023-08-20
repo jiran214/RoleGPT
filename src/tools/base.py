@@ -1,26 +1,33 @@
-from typing import Type
-from pydantic import BaseModel, Field
+from abc import ABC
+from typing import Type, Any
 from langchain.tools import BaseTool
 
-
-class CurrentStockPriceInput(BaseModel):
-    """Inputs for get_current_stock_price"""
-
-    ticker: str = Field(description="Ticker symbol of the stock")
-    num: int = 123
+from pydantic import BaseModel
 
 
-class CurrentStockPriceTool(BaseTool):
-    name = "get_current_stock_price"
-    description = """
-        Useful when you want to get current stock price.
-        You should enter the stock ticker symbol recognized by the yahoo finance
-        """
-    args_schema: Type[BaseModel] = CurrentStockPriceInput
+class ToolModel(BaseModel, ABC):
 
-    def _run(self, ticker: str):
-        price_response = 15
-        return price_response
+    def use(self, *args, **kwargs):
+        raise NotImplementedError
 
-    def _arun(self, ticker: str):
-        raise NotImplementedError("get_current_stock_price does not support async")
+
+    class Meta:
+        name = ""  # 工具名称
+        description = ""  # 工具描述
+
+
+class LangchainToolAdapter(BaseTool):
+    @classmethod
+    def from_tool_model(cls, tool_model: Type[ToolModel]):
+        instance = cls(
+            name = tool_model.Meta.name,
+            description = tool_model.Meta.description,
+            args_schema = tool_model
+        )
+        return instance
+
+    def _run(self, *args: Any, **kwargs: Any) -> Any:
+        assert self.args_schema
+        tool_model = self.args_schema(*args, **kwargs)
+        return tool_model.use()
+

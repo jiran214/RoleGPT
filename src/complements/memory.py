@@ -36,6 +36,7 @@ class Memory:
         self.client = client
 
     def recall(self, cue: MemoryCue):
+        query = '123'
         docs = self.client.similarity_search(query, k=4)
         return docs
 
