@@ -1,24 +1,19 @@
-import logging
-import os.path
+import sys
 
+from loguru import logger
+import os.path
 import config
 
 
-def get_logger(file_name):
-    logger = logging.getLogger(file_name)
-    logger.setLevel(level=logging.DEBUG)
-    formatter = logging.Formatter('%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s')
+def get_loguru_logger(file_name):
+    logger.remove()  # 清除默认配置的处理器和格式器
 
-    if config.debug:
-        stream_handler = logging.StreamHandler()
-        stream_handler.setLevel(level=logging.DEBUG)
-        stream_handler.setFormatter(formatter)
-        logger.addHandler(stream_handler)
-    else:
-        filename = os.path.join(config.root_path / f'logs/{file_name}.log')
-        file_handler = logging.FileHandler(filename)
-        # file_handler = handlers.TimedRotatingFileHandler(filename=f'{file_name}.log', when='D')
-        file_handler.setLevel(level=logging.INFO)
-        file_handler.setFormatter(formatter)
-        logger.addHandler(file_handler)
+    logfile = f'{file_name}.log'
+    log_path = config.root_path / 'logs' / logfile
+
+    # 添加控制台处理器
+    logger.add(sys.stdout, level="DEBUG")
+    # 添加文件处理器
+    # logger.add(log_path, level="INFO")
     return logger
+

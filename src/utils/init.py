@@ -1,7 +1,5 @@
 import openai
-import openai as openai
-from ratelimit import RateLimitDecorator, limits
-
+import openai
 import config
 from utils.api_key_manager import KeyManager, inject_param_decorator
 
@@ -12,6 +10,7 @@ openai.Embedding.create = inject_param_decorator(api_key=key_manager.assign)(ope
 
 
 # 代理
+...
 
 
 # 测试网络环境

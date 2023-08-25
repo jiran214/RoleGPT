@@ -13,18 +13,23 @@ from langchain.schema import SystemMessage
 
 import config
 from modules import llm
+from roles.base import Role
 from tools.base import LangchainToolAdapter, ToolModel
 
 
 def initialize_role_agent(
+        role: Role,
         tools: List[Type[ToolModel]],
+        langchain_tools: List[Type[ToolModel]]=None,
         prompt: Optional[SystemMessage] = SystemMessage(
             content="You are a helpful AI assistant."
         ),
         agent=AgentType.OPENAI_FUNCTIONS
 ):
     agent = initialize_agent(
-        [LangchainToolAdapter.from_tool_model(tool) for tool in tools],
+        [LangchainToolAdapter.from_tool_model(role, tool) for tool in tools] + [
+            tool for tool in langchain_tools or []
+        ],
         llm=llm.ChatGPT0613,
         agent=agent,
         agent_kwargs={'system_message': prompt}

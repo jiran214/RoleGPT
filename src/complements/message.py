@@ -7,13 +7,16 @@
 from queue import Queue
 from typing import Any, Iterable
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+
+from complements import interaction
 
 
 class Message(BaseModel):
     origin: 'Role'
     to: 'Role'
     message: Any
+    interaction_type: str = Field(enum=interaction.InteractionType)
 
 
 class MessageQueue:

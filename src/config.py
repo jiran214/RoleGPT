@@ -18,4 +18,3 @@ api_key_list = [
 language = '中文'
 proxy = 'http://127.0.0.1:7890'
 
-from utils import init

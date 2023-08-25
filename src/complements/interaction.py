@@ -4,6 +4,14 @@
 # @Author  : 雷雨
 # @File    : interaction.py
 # @Desc    :
+from enum import Enum
+
+
+class InteractionType(Enum, str):
+    dialog = 'dialog'
+    conference = 'conference'
+
+
 class Dialog:
     roles = []
 
