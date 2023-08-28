@@ -66,7 +66,7 @@ class Group:
             if len([path for path in common_path.iterdir()]) > 0:
                 knowledge_base = knowledge.Knowledge(base_name=f"{self.group_name}.common")
                 dir_path = common_path.absolute()
-                knowledge_base.learn(dir_path)
+                knowledge_base.learn_from_files(dir_path)
                 role.set_common_knowledge(knowledge_base)
             self.roles.append(role)
 

@@ -13,6 +13,7 @@ from modules.vectorstore import MemoryFactory
 
 
 class Knowledge:
+    """记忆导入"""
 
     def __init__(self, base_name):
         self.long_term_memory: LongTermMemory = MemoryFactory.from_disk(collection=base_name)
@@ -20,7 +21,7 @@ class Knowledge:
     def search(self, cue: MemoryCue):
         self.long_term_memory.recall(cue)
 
-    def learn(self, dir_path):
+    def learn_from_files(self, dir_path):
         loader = Loader(dir_path)
         if loader.is_new_file():
             for docs in loader.load():

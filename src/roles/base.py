@@ -73,7 +73,7 @@ class Role(abc.ABC):
         if common_tools: cls.tools.extend(common_tools)
         knowledge_base = knowledge.Knowledge(base_name=f"{cls.name}.long_term_memory")
         dir_path = (config.knowledge_path / cls.name).absolute()
-        knowledge_base.learn(dir_path)
+        knowledge_base.learn_from_files(dir_path)
         role_context = RoleContext(
             shor_term_memory=MemoryFactory.from_memory(f"{cls.name}.short_term_memory"),
             long_term_memory=knowledge_base.as_long_term_memory(),
